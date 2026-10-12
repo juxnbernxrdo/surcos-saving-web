@@ -1,0 +1,310 @@
+@import "tailwindcss";
+
+/* 
+  Surcos Saving Design System - Tailwind 4.x Theme
+  Derived from design-guidelines.md (StarMind AI Core)
+*/
+@theme {
+  --color-white: var(--white);
+  --color-off-white: var(--off-white);
+  --color-border: var(--border);
+  --color-border-light: var(--border-light);
+
+  --color-text-1: var(--text-1);
+  --color-text-2: var(--text-2);
+  --color-text-3: var(--text-3);
+  --color-text-4: var(--text-4);
+
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-soft: var(--accent-soft);
+
+  --color-green: var(--green);
+  --color-green-soft: var(--green-soft);
+  --color-red: var(--red);
+  --color-red-soft: var(--red-soft);
+  --color-amber: var(--amber);
+  --color-amber-soft: var(--amber-soft);
+
+  --color-avatar-bg: var(--avatar-bg);
+  --color-avatar-text: var(--avatar-text);
+
+  --color-cta-bg: var(--cta-bg);
+  --color-cta-text: var(--cta-text);
+  --color-cta-accent: var(--cta-accent);
+  --color-cta-green: var(--cta-green);
+  
+  --font-serif: var(--font-instrument), Georgia, serif;
+  --font-sans: var(--font-geist-sans), -apple-system, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+  --radius-lg: 18px;
+  --radius-md: 14px;
+  --radius-sm: 10px;
+  --radius-full: 9999px;
+
+  /* Pill input system (SPEC-129) */
+  --input-radius: var(--radius-full);
+  --input-height-form: 3rem; /* 48px — h-12 */
+  --input-height-toolbar: 2.5rem; /* 40px — h-10 */
+  --input-height-compact: 2.25rem; /* 36px — h-9 */
+
+  --shadow-subtle: 0 1px 4px rgba(0,0,0,0.05);
+  --shadow-default: 0 4px 20px rgba(0,0,0,0.07);
+  --shadow-prominent: 0 8px 40px rgba(0,0,0,0.10);
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
+}
+
+:root {
+  /* Colors */
+  --white: #ffffff;
+  --off-white: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-surface-elevated: #f5f5f7;
+  --border: #e0e0e5;
+  --border-light: #ebebf0;
+  
+  --text-1: #1d1d1f;
+  --text-2: #424245;
+  --text-3: #6e6e73;
+  --text-4: #aeaeb2;
+  
+  --accent: #0071e3;
+  --accent-hover: #0077ed;
+  --accent-soft: #e8f0fc;
+
+  --green: #30d158;
+  --green-soft: #e6f9ed;
+  --red: #ff3b30;
+  --red-soft: #fff0f0;
+  --amber: #ff9f0a;
+  --amber-soft: #fff8ec;
+
+  --nav-bg: rgba(255, 255, 255, 0.80);
+
+  --cta-bg: #1d1d1f;
+  --cta-text: #ffffff;
+  --cta-accent: var(--accent);
+  --cta-green: var(--green);
+
+  --avatar-bg: #000000;
+  --avatar-text: #ffffff;
+
+  --bg-hover: #f5f5f7;
+
+  background-color: var(--white);
+  color: var(--text-1);
+}
+
+.dark {
+  --white: #000000;
+  --off-white: #121212;
+  --bg-surface: #000000;
+  --bg-surface-elevated: #121212;
+  --border: #2c2c2e;
+  --border-light: #1c1c1e;
+  
+  --text-1: #ffffff;
+  --text-2: #ebebeb;
+  --text-3: #a1a1a6;
+  --text-4: #6e6e73;
+  
+  --accent: #0a84ff;
+  --accent-hover: #409fff;
+  --accent-soft: rgba(10, 132, 255, 0.15);
+
+  --green-soft: rgba(48, 209, 88, 0.15);
+  --red-soft: rgba(255, 59, 48, 0.15);
+  --amber-soft: rgba(255, 159, 10, 0.15);
+
+  --nav-bg: rgba(0, 0, 0, 0.82);
+
+  --cta-bg: #ffffff;
+  --cta-text: #1d1d1f;
+  --cta-accent: #0055b3;
+  --cta-green: #1a8a3e;
+
+  --avatar-bg: #ffffff;
+  --avatar-text: #000000;
+
+  --bg-hover: #1c1c1e;
+
+  background-color: var(--white);
+  color: var(--text-1);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not(.light) {
+    --white: #000000;
+    --off-white: #121212;
+    --bg-surface: #000000;
+    --bg-surface-elevated: #121212;
+    --border: #2c2c2e;
+    --border-light: #1c1c1e;
+    --text-1: #ffffff;
+    --text-2: #ebebeb;
+    --text-3: #a1a1a6;
+    --text-4: #6e6e73;
+    --accent: #0a84ff;
+    --accent-hover: #409fff;
+    --accent-soft: rgba(10, 132, 255, 0.15);
+    --green-soft: rgba(48, 209, 88, 0.15);
+    --red-soft: rgba(255, 59, 48, 0.15);
+    --amber-soft: rgba(255, 159, 10, 0.15);
+    --cta-bg: #ffffff;
+    --cta-text: #1d1d1f;
+    --nav-bg: rgba(0, 0, 0, 0.82);
+    --avatar-bg: #ffffff;
+    --bg-hover: #1c1c1e;
+  }
+}
+
+/* High Contrast Mode Accessibility Overrides */
+html.high-contrast {
+  --text-1: #000000;
+  --text-2: #111111;
+  --text-3: #222222;
+  --text-4: #444444;
+  --border: #000000;
+  --border-light: #444444;
+  --accent: #004080;
+  --accent-soft: #d0e4ff;
+}
+
+html.dark.high-contrast {
+  --white: #000000;
+  --off-white: #0a0a0a;
+  --text-1: #ffffff;
+  --text-2: #f0f0f0;
+  --text-3: #dddddd;
+  --text-4: #bbbbbb;
+  --border: #ffffff;
+  --border-light: #888888;
+  --accent: #66b2ff;
+  --accent-soft: rgba(102, 178, 255, 0.25);
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--white);
+  color: var(--text-2);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  width: 100%;
+  -webkit-tap-highlight-color: transparent;
+  text-rendering: optimizeLegibility;
+  -webkit-text-size-adjust: 100%;
+}
+
+img,
+svg,
+video,
+canvas {
+  image-rendering: crisp-edges;
+  image-rendering: -webkit-optimize-contrast;
+}
+
+button,
+a,
+input,
+select,
+textarea,
+[role="button"],
+[tabindex] {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+*:focus-visible {
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+h1, h2, .font-serif {
+  font-family: var(--font-serif);
+  color: var(--text-1);
+}
+
+h3, h4, h5, h6 {
+  font-family: var(--font-sans);
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* Custom Scrollbar */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--text-4);
+}
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
+
+/* Sonner Toast Styling */
+[data-sonner-toaster] {
+  --normal-bg: var(--white);
+  --normal-border: var(--border-light);
+  --normal-text: var(--text-1);
+  font-family: var(--font-sans) !important;
+}
+
+[data-sonner-toast] {
+  background: rgba(255, 255, 255, 0.88) !important;
+  backdrop-filter: blur(20px) saturate(190%) !important;
+  -webkit-backdrop-filter: blur(20px) saturate(190%) !important;
+  border: 1px solid rgba(224, 224, 229, 0.6) !important;
+  border-radius: 14px !important;
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.08), 0 1px 3px rgba(0, 0, 0, 0.02) !important;
+  color: var(--text-1) !important;
+  padding: 12px 16px !important;
+  display: flex !important;
+  gap: 12px !important;
+  align-items: center !important;
+  font-size: 0.88rem !important;
+  line-height: 1.4 !important;
+}
+
+.dark [data-sonner-toast] {
+  background: rgba(18, 18, 20, 0.85) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.5) !important;
+}
