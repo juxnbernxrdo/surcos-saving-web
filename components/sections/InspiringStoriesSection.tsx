@@ -1,176 +1,141 @@
 'use client';
 
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { SectionHeading } from '@/components/marketing/SectionHeading';
-import { Badge } from '@/components/ui/Badge';
-import { useEntrancePresets } from '@/components/marketing/motion-tokens';
-import {
-  Lightbulb,
-  Cpu,
-  TrendingUp,
-  ExternalLink,
-  BookOpen,
-  AlertCircle,
-} from 'lucide-react';
+import { EASE_OUT } from '@/components/marketing/motion-tokens';
+import { cn } from '@/lib/utils';
 
 export function InspiringStoriesSection() {
-  const { fadeUp } = useEntrancePresets();
-  const [activeStory, setActiveStory] = useState<string>('wang');
+  const [activeFigure, setActiveFigure] = useState<string>('wang');
 
-  const stories = [
+  const profiles = [
     {
       id: 'wang',
       name: 'Alexander Wang',
       role: 'Cofundador de Scale AI',
-      category: 'Tecnología & Inteligencia Artificial',
-      badgeVariant: 'accent' as const,
-      icon: Cpu,
-      bio: 'Emprendedor tecnológico estadounidense. Tras formarse en matemáticas y computación e ingresar al MIT, identificó que el cuello de botella más grande de la inteligencia artificial moderna no eran los algoritmos, sino los datos etiquetados de alta calidad. A los 19 años cofundó Scale AI para resolver esta necesidad.',
-      whatBuilt: 'Scale AI, infraestructura de etiquetado y evaluación de datos para modelos de aprendizaje profundo y visión artificial utilizada por industrias globales.',
-      studentLesson: 'Desarrollar una habilidad técnica profunda (programación y matemáticas) permite detectar problemas reales y construir soluciones funcionales. La capacidad de ejecución abre las puertas a colaborar y levantar proyectos.',
-      distinction: 'Scale AI creció mediante capital emprendedor (venture capital) e inversión externa institucional para financiar su rápida expansión, no únicamente con ahorros personales.',
-      source: 'Forbes 30 Under 30; MIT Technology Review; Entrevistas documentadas en Stanford ETL.',
+      category: 'Tecnología e inteligencia artificial',
+      summary: 'Una habilidad técnica de alto valor, combinada con la detección temprana de un cuello de botella, puede convertirse en una empresa mundial.',
+      bio: 'Criado en Los Álamos por padres físicos, compitió en olimpiadas de matemáticas y programación. En el MIT detectó que el obstáculo de la IA no eran los algoritmos, sino la falta de datos etiquetados. A los 19 años cofundó Scale AI.',
+      whatBuilt: 'Scale AI: infraestructura de anotación y evaluación de datos para modelos fundacionales de IA.',
+      studentLesson: 'Programar te permite construir prototipos sin grandes presupuestos. Si detectas un problema real y sabes construir la solución, tienes ventaja decisiva.',
+      distinction: 'Scale AI se financió con capital de riesgo institucional. El ahorro personal solo sostuvo la fase de prototipo inicial.',
+      source: 'Forbes 30 Under 30; MIT Technology Review.',
     },
     {
       id: 'musk',
       name: 'Elon Musk',
-      role: 'Cofundador de Zip2, X.com/PayPal, SpaceX y Tesla',
-      category: 'Visión, Riesgo & Re-inversión',
-      badgeVariant: 'warning' as const,
-      icon: Lightbulb,
-      bio: 'Inició programando software en su adolescencia. Con su primera empresa de software (Zip2) aprendió sobre desarrollo y ventas comerciales. Posteriormente cofundó X.com (que luego se fusionó para formar PayPal). Tras la venta de PayPal, reinvirtió la mayor parte de su capital en proyectos de alto riesgo técnico: la exploración aeroespacial (SpaceX) y la movilidad eléctrica (Tesla).',
-      whatBuilt: 'Múltiples empresas en software, finanzas digitales, exploración espacial y energía sostenible.',
-      studentLesson: 'Aprender a tolerar el riesgo calculado, mantener la curiosidad técnica y tener la disposición de reinvertir el resultado de los primeros éxitos en metas de mayor alcance en lugar de conformarse.',
-      distinction: 'Sus empresas requirieron miles de millones en capital de riesgo, subsidios de innovación y contratos comerciales. El ahorro personal es solo el primer cimiento de disciplina; la escala requiere gestión de riesgo empresarial.',
-      source: 'Biografía autorizada por Walter Isaacson (2023); Presentaciones y reportes regulatorios ante la SEC.',
+      role: 'Cofundador de Zip2, PayPal, SpaceX y Tesla',
+      category: 'Visión, riesgo y reinversión',
+      summary: 'Experimentación técnica, tolerancia al riesgo calculado y reinversión deliberada en metas de mayor alcance.',
+      bio: 'Programaba videojuegos en su infancia en Sudáfrica. Fundó Zip2 y cofundó X.com (luego PayPal). Tras la venta a eBay, reinvirtió casi todo su capital en SpaceX y Tesla.',
+      whatBuilt: 'Compañías pioneras en software financiero, astronáutica reutilizable y vehículos eléctricos.',
+      studentLesson: 'La disciplina con el dinero da margen para asumir riesgos calculados. Reinvertir las primeras ganancias escolares es el germen de esta mentalidad.',
+      distinction: 'Sus empresas requirieron miles de millones en capital de riesgo y contratos NASA. El ahorro personal fue solo la chispa.',
+      source: 'Biografía de Walter Isaacson (2023); reportes ante la SEC.',
     },
     {
       id: 'buffett',
       name: 'Warren Buffett',
-      role: 'Presidente y CEO de Berkshire Hathaway',
-      category: 'Disciplina Financiera & Largo Plazo',
-      badgeVariant: 'success' as const,
-      icon: TrendingUp,
-      bio: 'Comenzó realizando pequeños trabajos y vendiendo periódicos en su juventud, anotando cada centavo en libretas contables. Estudió bajo la mentoría de Benjamin Graham y construyó una de las trayectorias de asignación de capital más consistentes de la historia.',
-      whatBuilt: 'El conglomerado Berkshire Hathaway mediante inversión disciplinada en negocios sólidos con ventajas competitivas sostenibles.',
-      studentLesson: 'La paciencia y el interés compuesto premian la regularidad. Evitar deudas innecesarias, vivir por debajo de tus posibilidades y comprender a fondo en qué colocas tu dinero antes de asumir riesgos.',
-      distinction: 'Buffett distingue con rigor el ahorro (conservación disciplinada de fondos) de la inversión (asunción de riesgos informados en activos productivos). Ahorrar genera el margen de seguridad para luego poder invertir.',
-      source: 'Cartas anuales a los accionistas de Berkshire Hathaway; "The Snowball" por Alice Schroeder.',
+      role: 'Presidente de Berkshire Hathaway',
+      category: 'Disciplina financiera y largo plazo',
+      summary: 'Paciencia, interés compuesto y distinción rigurosa entre proteger el dinero (ahorro) y hacerlo trabajar (inversión).',
+      bio: 'Desde los 11 años vendía periódicos y anotaba cada ingreso en cuadernos. Formado con Benjamin Graham en Columbia, construyó Berkshire con décadas de asignación disciplinada de capital.',
+      whatBuilt: 'Uno de los conglomerados más admirados de la historia mediante inversión a largo plazo.',
+      studentLesson: 'Gastar menos de lo que ingresas, evitar deudas por consumo y entender en qué colocas tu dinero antes de arriesgarlo.',
+      distinction: 'Ahorrar e invertir son disciplinas distintas: el ahorro preserva el margen; la inversión asume riesgos calculados.',
+      source: 'Cartas a accionistas de Berkshire; “The Snowball” de Alice Schroeder.',
     },
   ];
 
+  const current = profiles.find((p) => p.id === activeFigure) || profiles[0];
+
   return (
-    <section className="py-20 md:py-28 border-b border-[var(--border-light)] bg-[var(--off-white)]/40">
+    <section id="historias" className="bg-[var(--white)] border-b border-[var(--border-light)] py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <SectionHeading
           eyebrow="Perspectiva editorial"
-          eyebrowIcon={<BookOpen className="w-3.5 h-3.5" />}
-          title="Historias que inspiran: del ahorro a la creación de empresas"
-          subtitle="Aprender de referentes reales exige rigor: entender la diferencia entre disciplina de ahorro, riesgo empresarial y capital de crecimiento."
-          align="center"
+          title={
+            <>
+              Del ahorro a la creación{' '}
+              <em className="italic font-normal text-[var(--text-3)]">de empresas.</em>
+            </>
+          }
+          subtitle="Referentes reales con rigor: la frontera entre ahorro personal, capital de riesgo y ejecución."
         />
 
-        {/* Tab Selector */}
-        <div className="mt-12 flex justify-center">
-          <div className="inline-flex p-1.5 rounded-full bg-[var(--white)] border border-[var(--border-light)] shadow-xs">
-            {stories.map((s) => (
-              <button
-                key={s.id}
-                type="button"
-                onClick={() => setActiveStory(s.id)}
-                className={`px-4 sm:px-5 py-2 rounded-full text-xs sm:text-sm font-semibold transition-all duration-150 cursor-pointer ${
-                  activeStory === s.id
-                    ? 'bg-[var(--accent)] text-white shadow-xs'
-                    : 'text-[var(--text-3)] hover:text-[var(--text-1)]'
-                }`}
-              >
-                {s.name}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Story Active Card */}
-        {stories
-          .filter((s) => s.id === activeStory)
-          .map((story) => {
-            const Icon = story.icon;
+        {/* Selector — texto plano con indicador deslizante animado */}
+        <div className="mt-10 flex flex-wrap gap-x-8 gap-y-3 border-b border-[var(--border-light)]">
+          {profiles.map((p) => {
+            const isSelected = activeFigure === p.id;
             return (
-              <motion.div
-                key={story.id}
-                variants={fadeUp}
-                initial="hidden"
-                animate="visible"
-                className="mt-8 max-w-4xl mx-auto rounded-3xl border border-[var(--border)] bg-[var(--white)] p-6 sm:p-10 shadow-[var(--shadow-default)]"
+              <button
+                key={p.id}
+                type="button"
+                onClick={() => setActiveFigure(p.id)}
+                aria-pressed={isSelected}
+                className={cn(
+                  'relative pb-3 text-[0.95rem] font-semibold transition-colors cursor-pointer -mb-px focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--accent)] rounded-t-sm active:scale-[0.98]',
+                  isSelected
+                    ? 'text-[var(--accent)]'
+                    : 'text-[var(--text-3)] hover:text-[var(--text-1)]'
+                )}
               >
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border-light)]">
-                  <div className="flex items-center gap-3.5">
-                    <div className="w-12 h-12 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center flex-shrink-0">
-                      <Icon className="w-6 h-6 stroke-[2]" />
-                    </div>
-                    <div>
-                      <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[var(--text-1)]">
-                        {story.name}
-                      </h3>
-                      <p className="text-xs sm:text-sm text-[var(--text-3)]">
-                        {story.role}
-                      </p>
-                    </div>
-                  </div>
-                  <Badge variant={story.badgeVariant} size="md">
-                    {story.category}
-                  </Badge>
-                </div>
-
-                <div className="pt-6 space-y-6">
-                  <div>
-                    <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-3)] mb-2">
-                      Trayectoria y contexto
-                    </h4>
-                    <p className="text-sm sm:text-base text-[var(--text-2)] leading-relaxed">
-                      {story.bio}
-                    </p>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div className="p-5 rounded-2xl bg-[var(--off-white)] border border-[var(--border-light)]">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] mb-2">
-                        Qué construyó
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[var(--text-1)] leading-relaxed">
-                        {story.whatBuilt}
-                      </p>
-                    </div>
-
-                    <div className="p-5 rounded-2xl bg-[var(--green-soft)]/50 border border-[var(--green)]/20">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--green)] mb-2">
-                        Aprendizaje para un estudiante
-                      </h4>
-                      <p className="text-xs sm:text-sm text-[var(--text-1)] leading-relaxed">
-                        {story.studentLesson}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Rigor note: Distinguishing personal savings from venture capital/risk */}
-                  <div className="p-4 rounded-xl border border-[var(--amber)]/30 bg-[var(--amber-soft)]/60 text-xs text-[var(--text-2)] leading-relaxed flex items-start gap-2.5">
-                    <AlertCircle className="w-4 h-4 text-[var(--amber)] flex-shrink-0 mt-0.5" />
-                    <div>
-                      <strong className="text-[var(--text-1)]">Distinción clave: </strong>
-                      {story.distinction}
-                    </div>
-                  </div>
-
-                  {/* Verifiable citation */}
-                  <div className="text-[11px] text-[var(--text-4)] pt-2 border-t border-[var(--border-light)] flex items-center justify-between">
-                    <span>Fuente verificable: {story.source}</span>
-                    <span className="font-mono">Hechos verificados</span>
-                  </div>
-                </div>
-              </motion.div>
+                {p.name}
+                {isSelected && (
+                  <motion.span
+                    layoutId="storiesIndicator"
+                    className="absolute bottom-0 left-0 right-0 h-[2px] bg-[var(--accent)]"
+                    transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  />
+                )}
+              </button>
             );
           })}
+        </div>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={current.id}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18, ease: EASE_OUT }}
+            className="mt-10 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-start max-w-6xl"
+          >
+            <div className="lg:col-span-7">
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)] block mb-3">
+                {current.category}
+              </span>
+              <h3 className="font-serif text-[clamp(1.6rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-1">
+                {current.name}
+              </h3>
+              <p className="text-[0.95rem] font-medium text-[var(--text-3)] mb-6">{current.role}</p>
+              <p className="text-[0.95rem] text-[var(--text-2)] leading-relaxed mb-4">{current.bio}</p>
+              <p className="text-[0.95rem] text-[var(--text-2)] leading-relaxed">
+                <strong className="text-[var(--text-1)] font-semibold">Qué construyó: </strong>
+                {current.whatBuilt}
+              </p>
+              <p className="text-[0.82rem] text-[var(--text-4)] mt-6 pt-4 border-t border-[var(--border-light)]">
+                Fuente: {current.source}
+              </p>
+            </div>
+
+            <div className="lg:col-span-5">
+              <p className="text-[0.95rem] text-[var(--text-2)] leading-relaxed mb-6">{current.summary}</p>
+              <ul className="space-y-2.5">
+                <li className="flex items-start gap-2.5 text-[0.92rem] text-[var(--text-2)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-2 shrink-0" />
+                  <span>{current.studentLesson}</span>
+                </li>
+                <li className="flex items-start gap-2.5 text-[0.92rem] text-[var(--text-3)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--text-4)] mt-2 shrink-0" />
+                  <span>{current.distinction}</span>
+                </li>
+              </ul>
+            </div>
+          </motion.div>
+        </AnimatePresence>
       </div>
     </section>
   );

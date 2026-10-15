@@ -1,396 +1,245 @@
 'use client';
 
-import React, { useState, useId } from 'react';
+import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { SectionHeading } from '@/components/marketing/SectionHeading';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
 import { Input } from '@/components/ui/Input';
 import { Modal } from '@/components/ui/Modal';
-import { useEntrancePresets } from '@/components/marketing/motion-tokens';
+import { Button } from '@/components/ui/Button';
 import { formatCurrency } from '@/lib/utils';
-import {
-  Store,
-  Palette,
-  Calculator,
-  ArrowRight,
-  Sparkles,
-  Layers,
-  HelpCircle,
-  FileCheck2,
-  TrendingUp,
-  RotateCcw,
-  AlertTriangle,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 
 export function EntrepreneurshipSection() {
-  const { fadeUp } = useEntrancePresets();
   const [modalOpen, setModalOpen] = useState(false);
-
-  // Entrepreneurship Calculator State
   const [unitPrice, setUnitPrice] = useState<string>('2.50');
   const [unitsSold, setUnitsSold] = useState<string>('25');
   const [unitCost, setUnitCost] = useState<string>('1.00');
-  const [fixedCosts, setFixedCosts] = useState<string>('5.00'); // Packaging, signage
+  const [fixedCosts, setFixedCosts] = useState<string>('5.00');
 
   const p = Math.max(0.01, parseFloat(unitPrice) || 0);
   const q = Math.max(1, parseInt(unitsSold, 10) || 0);
   const c = Math.max(0, parseFloat(unitCost) || 0);
   const f = Math.max(0, parseFloat(fixedCosts) || 0);
 
-  // Calculations
   const grossRevenue = Number((p * q).toFixed(2));
   const variableCosts = Number((c * q).toFixed(2));
   const totalCosts = Number((variableCosts + f).toFixed(2));
   const estimatedProfit = Number((grossRevenue - totalCosts).toFixed(2));
-  const profitMarginPercent = grossRevenue > 0
-    ? Number(((estimatedProfit / grossRevenue) * 100).toFixed(1))
-    : 0;
-  
-  // Breakeven units: f / (p - c)
+  const profitMarginPercent = grossRevenue > 0 ? Number(((estimatedProfit / grossRevenue) * 100).toFixed(1)) : 0;
   const unitContribution = p - c;
-  const breakEvenUnits = unitContribution > 0
-    ? Math.ceil(f / unitContribution)
-    : 0;
+  const breakEvenUnits = unitContribution > 0 ? Math.ceil(f / unitContribution) : 0;
 
-  // Recommended cash split of profits (50% reinversion, 30% ahorro, 20% disfrute)
   const suggestedReinvestment = estimatedProfit > 0 ? Number((estimatedProfit * 0.50).toFixed(2)) : 0;
   const suggestedSavingsReserve = estimatedProfit > 0 ? Number((estimatedProfit * 0.30).toFixed(2)) : 0;
   const suggestedPersonalReward = estimatedProfit > 0 ? Number((estimatedProfit * 0.20).toFixed(2)) : 0;
 
   const steps = [
-    {
-      num: '01',
-      title: 'Identificar una necesidad',
-      desc: 'Observar los gustos de tus compañeros y profesores: ¿necesitan separadores para libros, stickers temáticos o llaveros de la promoción?',
-    },
-    {
-      num: '02',
-      title: 'Definir el producto y sus costes',
-      desc: 'Determinar qué materiales compras, cuánto cuesta cada insumo y cuál es el coste exacto de elaborar una sola unidad.',
-    },
-    {
-      num: '03',
-      title: 'Calcular el precio y el margen',
-      desc: 'Fijar un precio de venta justo que cubra los costes de insumos, los empaques y reconozca el valor de tu tiempo con una ganancia real.',
-    },
-    {
-      num: '04',
-      title: 'Autorizaciones y preparación',
-      desc: 'Presentar la propuesta de producto según el reglamento y cronograma institucional de la Unidad Educativa Surcos.',
-    },
-    {
-      num: '05',
-      title: 'Vender en la feria presencial',
-      desc: 'Atender a tus clientes con amabilidad, explicar el valor de lo que creaste y cobrar con claridad llevando el registro.',
-    },
-    {
-      num: '06',
-      title: 'Cierre de cuentas y reinversión',
-      desc: 'Sumar ingresos, restar costes, celebrar la ganancia neta y separar una parte para reiniciar el ciclo en la siguiente feria.',
-    },
+    { num: '01', title: 'Identificar una necesidad', desc: 'Observar hábitos de compañeros y docentes: ¿necesitan libretas, stickers o llaveros?' },
+    { num: '02', title: 'Definir producto y costes', desc: 'Desglosar cada material y calcular el coste unitario exacto de una pieza.' },
+    { num: '03', title: 'Calcular precio y margen', desc: 'Precio justo que cubra insumos, empaque y reconozca el valor de tu tiempo.' },
+    { num: '04', title: 'Autorización y preparación', desc: 'Presentar la propuesta según el reglamento de la Unidad Educativa Surcos.' },
+    { num: '05', title: 'Vender en la feria', desc: 'Atender la mesa, explicar el valor de tu creación y registrar cada venta.' },
+    { num: '06', title: 'Cierre y reinversión', desc: 'Restar costes, separar el 30% de reserva y reiniciar con el 50% de reinversión.' },
   ];
 
   const studentProducts = [
-    { title: 'Papelería personalizada', desc: 'Separadores de lectura, libretas cosidas a mano y stickers para cuadernos' },
-    { title: 'Artesanías y accesorios', desc: 'Pulseras tejidas, llaveros en resina o arcilla y prendedores creativos' },
-    { title: 'Ilustraciones y arte', desc: 'Postales temáticas, dibujos en acuarela y tarjetas de dedicatoria' },
-    { title: 'Artículos escolares creativos', desc: 'Fundas para lápices recicladas, portalápices y organizadores' },
+    { category: 'Papelería personalizada', examples: 'Separadores, libretas cosidas a mano, stickers', cost: '$0.30 – $0.80', price: '$1.50 – $3.00' },
+    { category: 'Artesanías y accesorios', examples: 'Pulseras tejidas, llaveros en resina, prendedores', cost: '$0.50 – $1.20', price: '$2.00 – $4.50' },
+    { category: 'Ilustraciones y arte', examples: 'Postales temáticas, acuarelas, dedicatorias', cost: '$0.40 – $1.00', price: '$2.00 – $5.00' },
+    { category: 'Artículos ecológicos', examples: 'Portalápices reciclados, estuches de tela', cost: '$0.20 – $0.60', price: '$1.50 – $3.50' },
   ];
 
   const concepts = [
-    { term: 'Ingresos', desc: 'Todo el dinero que entra por las ventas brutas totales.' },
-    { term: 'Costes', desc: 'Lo que gastaste en materiales (variables) y empaque/letrero (fijos).' },
-    { term: 'Ganancia real', desc: 'El sobrante neto tras haber recuperado todos tus costes.' },
-    { term: 'Precio de venta', desc: 'El monto que paga el comprador por cada artículo.' },
-    { term: 'Inventario', desc: 'El número de piezas que elaboraste y tienes disponibles.' },
-    { term: 'Atención al cliente', desc: 'La amabilidad y claridad para explicar tu producto en la mesa.' },
-    { term: 'Reinversión', desc: 'Apartar dinero para comprar mejores materiales la próxima vez.' },
-    { term: 'Reserva de ahorro', desc: 'Guardar al menos el 30% de tu ganancia para construir capital.' },
+    { term: 'Ingresos brutos', def: 'Dinero total cobrado al vender todas las unidades (precio × cantidad).' },
+    { term: 'Costes variables', def: 'Gasto en insumos que aumenta con cada unidad producida.' },
+    { term: 'Costes fijos', def: 'Gastos únicos que no varían por pieza (cartel, cinta, empaques).' },
+    { term: 'Ganancia neta', def: 'Lo que sobra tras recuperar la totalidad de costes.' },
+    { term: 'Margen (%)', def: 'Porcentaje del ingreso que se convierte en ganancia real.' },
+    { term: 'Punto de equilibrio', def: 'Unidades exactas que debes vender para no perder dinero.' },
   ];
 
   return (
-    <section id="emprendimiento" className="py-20 md:py-28 border-b border-[var(--border-light)] bg-[var(--white)]">
+    <section id="emprendimiento" className="bg-[var(--off-white)] border-b border-[var(--border-light)] py-20 md:py-28">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         <SectionHeading
-          eyebrow="Experiencia práctica"
-          eyebrowIcon={<Store className="w-3.5 h-3.5" />}
-          title="De una idea a una venta real en tu colegio"
-          subtitle="En Surcos Saving el ahorro tiene un propósito: convertirse en el capital semilla que te permita participar en ferias presenciales y vivir tu primera experiencia empresarial."
           align="center"
+          eyebrow="Ferias y práctica"
+          title={
+            <>
+              De una idea a una venta{' '}
+              <em className="italic font-normal text-[var(--accent)]">real en tu colegio.</em>
+            </>
+          }
+          subtitle="El ahorro financia tus insumos; las ferias presenciales te dan tu primera experiencia empresarial."
+          className="mb-16 md:mb-20"
         />
 
-        {/* 6 Steps Roadmap */}
-        <div className="mt-14 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Ruta metodológica — 6 pasos editoriales */}
+        <div className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 lg:gap-12">
           {steps.map((st) => (
-            <motion.div
-              key={st.num}
-              variants={fadeUp}
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, amount: 0.15 }}
-              className="rounded-2xl border border-[var(--border-light)] bg-[var(--white)] p-6 shadow-xs hover:border-[var(--border)] transition-all duration-150"
-            >
-              <span className="font-mono text-2xl font-bold text-[var(--accent)] mb-2 block">
+            <article key={st.num} className="text-center sm:text-left">
+              <span aria-hidden="true" className="block font-serif text-[clamp(2rem,3vw,2.6rem)] leading-none text-[var(--text-4)] opacity-60 select-none">
                 {st.num}
               </span>
-              <h3 className="text-base font-semibold text-[var(--text-1)] tracking-tight mb-2">
+              <h3 className="text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-[var(--text-1)] mt-4 mb-2">
                 {st.title}
               </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-2)] leading-relaxed">
-                {st.desc}
-              </p>
-            </motion.div>
+              <p className="text-[0.9rem] leading-[1.7] text-[var(--text-2)]">{st.desc}</p>
+            </article>
           ))}
         </div>
 
-        {/* Suitable School Products */}
-        <div className="mt-14 rounded-3xl border border-[var(--border)] bg-[var(--off-white)] p-6 sm:p-8">
-          <div className="max-w-2xl mb-6">
-            <span className="text-xs font-semibold uppercase tracking-wider text-[var(--green)] block mb-1">
-              Catálogo pedagógico sugerido
-            </span>
-            <h3 className="font-serif text-xl sm:text-2xl text-[var(--text-1)] font-normal">
-              Ideas de productos viables para ferias estudiantiles
-            </h3>
-            <p className="text-xs sm:text-sm text-[var(--text-3)] mt-1">
-              Sujetos a la autorización institucional y reglamentos de la Unidad Educativa Surcos.
-            </p>
+        {/* Catálogo — tabla, no inspector con cajas */}
+        <div className="mt-16 md:mt-20 max-w-6xl mx-auto">
+          <h3 className="font-serif text-[clamp(1.6rem,3vw,2.2rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-2">
+            Productos viables para ferias escolares.
+          </h3>
+          <p className="text-[0.95rem] text-[var(--text-3)] mb-8">Sujetos a normas y calendario de la Unidad Educativa Surcos.</p>
+          <div className="border-y border-[var(--border-light)] overflow-x-auto">
+            <table className="w-full text-left text-sm border-collapse min-w-[640px]">
+              <thead>
+                <tr className="text-[11px] font-semibold uppercase tracking-wider text-[var(--text-4)]">
+                  <th className="py-3 pr-4">Categoría</th>
+                  <th className="py-3 px-4">Ejemplos</th>
+                  <th className="py-3 px-4 text-right">Coste</th>
+                  <th className="py-3 pl-4 text-right">Precio</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-[var(--border-light)]">
+                {studentProducts.map((prod) => (
+                  <tr key={prod.category}>
+                    <td className="py-4 pr-4 font-semibold text-[var(--text-1)]">{prod.category}</td>
+                    <td className="py-4 px-4 text-[0.9rem] text-[var(--text-2)]">{prod.examples}</td>
+                    <td className="py-4 px-4 text-right font-mono text-[var(--text-2)]">{prod.cost}</td>
+                    <td className="py-4 pl-4 text-right font-mono font-bold text-[var(--accent)]">{prod.price}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
+        </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            {studentProducts.map((p, i) => (
-              <div
-                key={i}
-                className="p-4 rounded-2xl bg-[var(--white)] border border-[var(--border-light)] shadow-2xs"
-              >
-                <div className="w-8 h-8 rounded-lg bg-[var(--green-soft)] text-[var(--green)] flex items-center justify-center mb-3">
-                  <Palette className="w-4 h-4 stroke-[2]" />
+        {/* Glosario — tabla de dos columnas */}
+        <div className="mt-16 max-w-6xl mx-auto">
+          <h3 className="font-serif text-[clamp(1.6rem,3vw,2.2rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-8">
+            Seis conceptos antes de vender.
+          </h3>
+          <div className="border-y border-[var(--border-light)]">
+            <dl className="divide-y divide-[var(--border-light)]">
+              {concepts.map((c) => (
+                <div key={c.term} className="grid grid-cols-1 sm:grid-cols-12 gap-1 sm:gap-6 py-4">
+                  <dt className="sm:col-span-4 text-[0.92rem] font-semibold text-[var(--text-1)]">{c.term}</dt>
+                  <dd className="sm:col-span-8 text-[0.92rem] text-[var(--text-3)] leading-relaxed">{c.def}</dd>
                 </div>
-                <h4 className="text-sm font-semibold text-[var(--text-1)] mb-1">
-                  {p.title}
-                </h4>
-                <p className="text-xs text-[var(--text-3)] leading-relaxed">
-                  {p.desc}
-                </p>
-              </div>
-            ))}
+              ))}
+            </dl>
           </div>
         </div>
 
-        {/* Essential Financial Concepts */}
-        <div className="mt-16">
-          <div className="text-center max-w-2xl mx-auto mb-8">
-            <h3 className="font-serif text-2xl text-[var(--text-1)] font-normal">
-              Conceptos clave que aprenderás antes de vender
-            </h3>
-            <p className="text-xs sm:text-sm text-[var(--text-3)] mt-1">
-              Hablar de negocios con propiedad: no confundir nunca lo que cobras con lo que realmente ganas.
-            </p>
+        {/* Simulador — controles + fila dividida */}
+        <div className="mt-16 md:mt-20 max-w-6xl mx-auto">
+          <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)] block mb-3">
+            Simulador de rentabilidad
+          </span>
+          <h3 className="font-serif text-[clamp(1.6rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-2">
+            ¿Cuánto ganarías en una feria?
+          </h3>
+          <p className="text-[0.95rem] text-[var(--text-2)] mb-8">
+            Ganancia estimada = Ingresos por ventas − Costes totales.
+          </p>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            <Input label="Precio unitario ($)" helperText="Por pieza" type="number" step="0.25" min="0.10" value={unitPrice} onChange={(e) => setUnitPrice(e.target.value)} />
+            <Input label="Unidades" helperText="Piezas elaboradas" type="number" step="5" min="1" value={unitsSold} onChange={(e) => setUnitsSold(e.target.value)} />
+            <Input label="Coste unitario ($)" helperText="Material por pieza" type="number" step="0.10" min="0" value={unitCost} onChange={(e) => setUnitCost(e.target.value)} />
+            <Input label="Costes fijos ($)" helperText="Letrero, empaque" type="number" step="1" min="0" value={fixedCosts} onChange={(e) => setFixedCosts(e.target.value)} />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-            {concepts.map((c, idx) => (
-              <div
-                key={idx}
-                className="p-3.5 sm:p-4 rounded-xl border border-[var(--border-light)] bg-[var(--white)] shadow-2xs"
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-0 md:divide-x divide-[var(--border-light)] border-y border-[var(--border-light)] py-8">
+            <div className="md:pr-8">
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--text-3)] block mb-2">Ingresos brutos</span>
+              <motion.div
+                key={grossRevenue}
+                initial={{ opacity: 0.8, y: -2 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+                className="font-mono font-bold text-[clamp(1.8rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-none"
               >
-                <span className="text-xs font-bold text-[var(--accent)] block mb-1">
-                  {c.term}
-                </span>
-                <p className="text-[11px] sm:text-xs text-[var(--text-2)] leading-tight">
-                  {c.desc}
-                </p>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Interactive Entrepreneurship Calculator */}
-        <div className="mt-16 rounded-3xl border border-[var(--border)] bg-[var(--white)] shadow-[var(--shadow-default)] overflow-hidden">
-          <div className="p-6 sm:p-8 md:p-10">
-            <div className="max-w-2xl mb-8">
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold bg-[var(--accent-soft)] text-[var(--accent)] mb-2">
-                <Calculator className="w-3.5 h-3.5" /> Herramienta de simulación de feria
-              </span>
-              <h3 className="font-serif text-2xl sm:text-3xl text-[var(--text-1)] font-normal mb-2">
-                Calculadora interactiva de ganancia de tu emprendimiento
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-2)]">
-                Fórmula oficial: <code className="font-mono bg-[var(--off-white)] px-2 py-0.5 rounded text-[var(--accent)] font-semibold">Ganancia estimada = Ingresos por ventas − Costes totales</code>
+                {formatCurrency(grossRevenue)}
+              </motion.div>
+              <p className="text-[0.82rem] text-[var(--text-3)] mt-2">{q} unidades × {formatCurrency(p)}</p>
+            </div>
+            <div className="md:px-8">
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--text-3)] block mb-2">Costes totales</span>
+              <motion.div
+                key={totalCosts}
+                initial={{ opacity: 0.8, y: -2 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+                className="font-mono font-bold text-[clamp(1.8rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-none"
+              >
+                {formatCurrency(totalCosts)}
+              </motion.div>
+              <p className="text-[0.82rem] text-[var(--text-3)] mt-2">Variables {formatCurrency(variableCosts)} + fijos {formatCurrency(f)}</p>
+            </div>
+            <div className="md:pl-8">
+              <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)] block mb-2">Ganancia neta</span>
+              <motion.div
+                key={estimatedProfit}
+                initial={{ opacity: 0.8, y: -2 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.15, ease: [0.23, 1, 0.32, 1] }}
+                className="font-mono font-bold text-[clamp(1.8rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-none"
+              >
+                {formatCurrency(estimatedProfit)}<span className="text-[var(--accent)] text-[0.55em]"> · {profitMarginPercent}%</span>
+              </motion.div>
+              <p className="text-[0.82rem] text-[var(--text-3)] mt-2">
+                {estimatedProfit > 0
+                  ? `50% reinversión ${formatCurrency(suggestedReinvestment)} · 30% reserva ${formatCurrency(suggestedSavingsReserve)} · 20% recompensa ${formatCurrency(suggestedPersonalReward)}`
+                  : 'Reduce costes o ajusta el precio para lograr ganancia viable.'}
               </p>
             </div>
+          </div>
 
-            {/* Inputs Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-              <Input
-                label="Precio unitario ($)"
-                helperText="A cuánto venderás cada pieza"
-                type="number"
-                step="0.25"
-                min="0.10"
-                value={unitPrice}
-                onChange={(e) => setUnitPrice(e.target.value)}
-              />
+          {breakEvenUnits > 0 && estimatedProfit > 0 && (
+            <p className="text-center text-[0.9rem] text-[var(--text-3)] leading-relaxed max-w-xl mx-auto mt-8">
+              Punto de equilibrio: vende {breakEvenUnits} unidades para recuperar tus costes fijos.
+              Desde la unidad {breakEvenUnits + 1}, cada venta es ganancia neta.
+            </p>
+          )}
 
-              <Input
-                label="Unidades estimadas"
-                helperText="Cuántas piezas elaborarás"
-                type="number"
-                step="5"
-                min="1"
-                value={unitsSold}
-                onChange={(e) => setUnitsSold(e.target.value)}
-              />
-
-              <Input
-                label="Coste unitario ($)"
-                helperText="Material por cada pieza"
-                type="number"
-                step="0.10"
-                min="0"
-                value={unitCost}
-                onChange={(e) => setUnitCost(e.target.value)}
-              />
-
-              <Input
-                label="Costes fijos ($)"
-                helperText="Empaque, letrero, mesa"
-                type="number"
-                step="1"
-                min="0"
-                value={fixedCosts}
-                onChange={(e) => setFixedCosts(e.target.value)}
-              />
-            </div>
-
-            {/* Visual Calculation Output Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-5 p-6 rounded-2xl bg-[var(--off-white)] border border-[var(--border-light)] mb-8">
-              {/* Gross Revenue */}
-              <div className="p-4 rounded-xl bg-[var(--white)] border border-[var(--border-light)] shadow-2xs">
-                <span className="text-xs font-semibold text-[var(--text-3)] uppercase tracking-wider block mb-1">
-                  Ingresos brutos
-                </span>
-                <div className="font-mono text-2xl font-bold text-[var(--text-1)]">
-                  {formatCurrency(grossRevenue)}
-                </div>
-                <p className="text-[11px] text-[var(--text-3)] mt-1">
-                  {q} unidades × {formatCurrency(p)}
-                </p>
-              </div>
-
-              {/* Total Costs */}
-              <div className="p-4 rounded-xl bg-[var(--white)] border border-[var(--border-light)] shadow-2xs">
-                <span className="text-xs font-semibold text-[var(--text-3)] uppercase tracking-wider block mb-1">
-                  Costes totales
-                </span>
-                <div className="font-mono text-2xl font-bold text-[var(--red)]">
-                  {formatCurrency(totalCosts)}
-                </div>
-                <p className="text-[11px] text-[var(--text-3)] mt-1">
-                  Insumos ({formatCurrency(variableCosts)}) + Fijos ({formatCurrency(f)})
-                </p>
-              </div>
-
-              {/* Net Profit */}
-              <div className="p-4 rounded-xl bg-[var(--white)] border border-[var(--green)]/30 shadow-2xs">
-                <span className="text-xs font-semibold text-[var(--green)] uppercase tracking-wider block mb-1">
-                  Ganancia neta estimada
-                </span>
-                <div className="font-mono text-2xl font-bold text-[var(--green)]">
-                  {formatCurrency(estimatedProfit)}
-                </div>
-                <p className="text-[11px] text-[var(--text-3)] mt-1">
-                  Margen: <strong>{profitMarginPercent}%</strong>
-                </p>
-              </div>
-            </div>
-
-            {/* Financial Health & Distribution Bar */}
-            {estimatedProfit > 0 ? (
-              <div className="rounded-2xl border border-[var(--border-light)] bg-[var(--white)] p-6 mb-8">
-                <h4 className="text-sm font-semibold text-[var(--text-1)] mb-3 flex items-center gap-2">
-                  <TrendingUp className="w-4 h-4 text-[var(--green)]" />
-                  Distribución pedagógica sugerida de tu ganancia ({formatCurrency(estimatedProfit)})
-                </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
-                  <div className="p-3 rounded-xl bg-[var(--accent-soft)] text-[var(--accent)] border border-[var(--accent)]/20">
-                    <span className="font-semibold block">50% Reinversión ({formatCurrency(suggestedReinvestment)})</span>
-                    <span className="text-[11px] text-[var(--text-2)] mt-0.5 block">Para comprar más stock en la siguiente feria</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[var(--green-soft)] text-[var(--green)] border border-[var(--green)]/20">
-                    <span className="font-semibold block">30% Ahorro ({formatCurrency(suggestedSavingsReserve)})</span>
-                    <span className="text-[11px] text-[var(--text-2)] mt-0.5 block">Fondo de reserva intocable</span>
-                  </div>
-                  <div className="p-3 rounded-xl bg-[var(--off-white)] text-[var(--text-1)] border border-[var(--border-light)]">
-                    <span className="font-semibold block">20% Disfrute ({formatCurrency(suggestedPersonalReward)})</span>
-                    <span className="text-[11px] text-[var(--text-3)] mt-0.5 block">Recompensa a tu esfuerzo personal</span>
-                  </div>
-                </div>
-
-                {breakEvenUnits > 0 && (
-                  <p className="text-xs text-[var(--text-3)] mt-4">
-                    💡 <strong>Punto de equilibrio:</strong> Necesitas vender <strong>{breakEvenUnits} unidades</strong> solo para recuperar tus costes fijos de {formatCurrency(f)}. A partir de la unidad {breakEvenUnits + 1}, cada venta es ganancia neta.
-                  </p>
-                )}
-              </div>
-            ) : (
-              <div className="rounded-2xl border border-[var(--amber)]/30 bg-[var(--amber-soft)] p-4 text-xs text-[var(--text-2)] mb-8 flex items-start gap-2.5">
-                <AlertTriangle className="w-4 h-4 text-[var(--amber)] flex-shrink-0 mt-0.5" />
-                <p>
-                  Atención: Con estos valores el coste supera o iguala al ingreso. Intenta reducir los costes de materiales o ajustar el precio de venta para obtener una ganancia viable.
-                </p>
-              </div>
-            )}
-
-            {/* Section CTA */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-6 border-t border-[var(--border-light)]">
-              <p className="text-xs text-[var(--text-3)] max-w-xl">
-                La participación en ferias depende de las fechas aprobadas, cupos, autorizaciones institucionales y el cumplimiento del reglamento estudiantil de la institución.
-              </p>
-
-              <Button
-                size="md"
-                variant="primary"
-                onClick={() => setModalOpen(true)}
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-                className="w-full sm:w-auto flex-shrink-0"
-              >
-                Quiero convertir mi idea en un emprendimiento
-              </Button>
-            </div>
+          <div className="mt-10 flex flex-col sm:flex-row items-center justify-between gap-6 pt-8 border-t border-[var(--border-light)]">
+            <p className="text-[0.95rem] text-[var(--text-3)] max-w-lg text-center sm:text-left">
+              La participación depende de convocatorias oficiales y del reglamento estudiantil.
+            </p>
+            <Button size="md" variant="primary" onClick={() => setModalOpen(true)} rightIcon={<ArrowRight className="w-4 h-4" />} className="w-full sm:w-auto shrink-0">
+              Quiero emprender en la feria
+            </Button>
           </div>
         </div>
 
-        {/* Modal: Quiero convertir mi idea */}
         <Modal
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
-          title="Inicia tu proyecto de emprendimiento"
-          description="Ruta formativa para estudiantes de la Unidad Educativa Surcos."
+          title="Ruta de participación en feria escolar"
+          description="Orientación oficial para estudiantes de la Unidad Educativa Surcos."
           size="md"
         >
           <div className="space-y-4">
-            <div className="p-4 rounded-xl bg-[var(--off-white)] border border-[var(--border-light)]">
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--accent)] mb-1">
-                ¿Cuál es el siguiente paso?
-              </h4>
-              <p className="text-xs text-[var(--text-2)] leading-relaxed">
-                1. Diseña tu prototipo en casa y calcula los costes en la calculadora de arriba.
-                <br />
-                2. Prepara una muestra física de tu producto.
-                <br />
-                3. Consulta con tu tutor o el comité organizador de la Unidad Educativa Surcos para solicitar tu espacio en la próxima feria programada.
-              </p>
-            </div>
-
-            <p className="text-xs text-[var(--text-3)] leading-relaxed">
-              Surcos Saving acompaña a los estudiantes con guías descargables de precios y organización antes de cada feria oficial.
+            <ul className="space-y-2.5">
+              {['Prototipo físico terminado y con fotos de muestra.', 'Cálculo de costes y precio completado en la calculadora.', 'Firma de autorización del representante legal (familiar).'].map((item) => (
+                <li key={item} className="flex items-start gap-2.5 text-[0.92rem] text-[var(--text-2)]">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[var(--accent)] mt-2 shrink-0" />
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+            <p className="text-xs text-[var(--text-3)] leading-relaxed pt-3 border-t border-[var(--border-light)]">
+              Surcos Saving acompaña a los expositores con guías de registro de caja y atención al cliente.
             </p>
-
             <div className="pt-2 flex justify-end">
               <Button size="sm" variant="primary" onClick={() => setModalOpen(false)}>
-                ¡Comprendido, prepararé mi propuesta!
+                Entendido, prepararé mi propuesta
               </Button>
             </div>
           </div>

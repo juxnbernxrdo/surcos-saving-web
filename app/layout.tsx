@@ -44,6 +44,10 @@ export const metadata: Metadata = {
     locale: 'es_EC',
     siteName: 'Surcos Saving',
   },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/icon.svg',
+  },
   robots: {
     index: true,
     follow: true,
@@ -61,28 +65,35 @@ export default function RootLayout({
       className={`${instrumentSerif.variable} ${GeistSans.variable} ${GeistMono.variable}`}
       suppressHydrationWarning
     >
-      <head>
-        <link rel="icon" href="/Logo-Horizontal.svg" type="image/svg+xml" />
+      <body className="antialiased min-h-screen bg-[var(--white)] text-[var(--text-1)] selection:bg-[var(--accent-soft)] selection:text-[var(--accent)]" suppressHydrationWarning>
+        {/* Script nativo (no next/script): debe ejecutarse antes del primer pintado
+            para evitar flash del tema incorrecto. */}
         <script
+          id="theme-initializer"
           dangerouslySetInnerHTML={{
-            __html: `
-              try {
-                const savedTheme = localStorage.getItem('surcos_theme');
-                const isDark = savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches);
-                if (isDark) {
-                  document.documentElement.classList.add('dark');
-                } else {
-                  document.documentElement.classList.remove('dark');
-                }
-                if (localStorage.getItem('surcos_high_contrast') === 'true') {
-                  document.documentElement.classList.add('high-contrast');
-                }
-              } catch (_) {}
-            `,
+            __html: `try {
+            document.documentElement.classList.add('no-transitions');
+            var savedTheme = localStorage.getItem('surcos_theme');
+            var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            var isDark = savedTheme === 'dark' || (savedTheme !== 'light' && prefersDark);
+            if (isDark) {
+              document.documentElement.classList.add('dark');
+              document.documentElement.classList.remove('light');
+            } else {
+              document.documentElement.classList.remove('dark');
+              document.documentElement.classList.add('light');
+            }
+            if (localStorage.getItem('surcos_high_contrast') === 'true') {
+              document.documentElement.classList.add('high-contrast');
+            }
+            window.addEventListener('DOMContentLoaded', function() {
+              requestAnimationFrame(function() {
+                document.documentElement.classList.remove('no-transitions');
+              });
+            });
+          } catch (_) {}`,
           }}
         />
-      </head>
-      <body className="antialiased min-h-screen bg-[var(--white)] text-[var(--text-1)] selection:bg-[var(--accent-soft)] selection:text-[var(--accent)]" suppressHydrationWarning>
         <ThemeProvider>
           {children}
           <Toaster position="top-right" />

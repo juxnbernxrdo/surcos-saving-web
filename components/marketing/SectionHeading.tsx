@@ -15,15 +15,16 @@ interface SectionHeadingProps {
 }
 
 /**
- * SectionHeading - Standard editorial section heading (label + serif heading + body text).
- * Implements subtle Emil Kowalski scroll-reveal with reduced-motion fallback.
+ * Sección heading consistente: label + título serif + subtítulo.
+ * Réplica del patrón ContaMind AI: eyebrow de texto plano (sin pill),
+ * reveal on scroll (once) con fallback reduced-motion (solo opacidad).
  */
 export function SectionHeading({
   eyebrow,
   eyebrowIcon,
   title,
   subtitle,
-  align = 'center',
+  align = 'left',
   className,
 }: SectionHeadingProps) {
   const { fadeUp } = useEntrancePresets();
@@ -33,13 +34,13 @@ export function SectionHeading({
       variants={fadeUp}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.3 }}
       className={cn('max-w-3xl', align === 'center' && 'mx-auto text-center', className)}
     >
       {eyebrow && (
         <div
           className={cn(
-            'inline-flex items-center gap-1.5 px-3 py-1 rounded-full mb-3.5 text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)] bg-[var(--accent-soft)] border border-[var(--accent)]/15 select-none',
+            'flex items-center gap-1.5 mb-4 text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)]',
             align === 'center' && 'justify-center'
           )}
         >
@@ -47,13 +48,11 @@ export function SectionHeading({
           <span>{eyebrow}</span>
         </div>
       )}
-      <h2 className="font-serif text-[clamp(2rem,3.6vw,3rem)] text-[var(--text-1)] tracking-tight leading-[1.14] mb-3.5">
+      <h2 className="font-serif text-[clamp(1.9rem,3.5vw,2.9rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-4">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-[1rem] sm:text-[1.08rem] text-[var(--text-3)] leading-relaxed font-normal">
-          {subtitle}
-        </p>
+        <p className="text-[1.05rem] text-[var(--text-2)] leading-relaxed font-normal">{subtitle}</p>
       )}
     </motion.div>
   );

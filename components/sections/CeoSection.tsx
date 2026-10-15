@@ -2,70 +2,67 @@
 
 import React from 'react';
 import { motion } from 'motion/react';
-import { Badge } from '@/components/ui/Badge';
 import { useEntrancePresets } from '@/components/marketing/motion-tokens';
-import { UserCheck, Code, Award, GraduationCap } from 'lucide-react';
+
+const CREDENTIALS = [
+  'Desarrollador de software desde los 13 años',
+  'Formación complementaria: programas como CS50 (Harvard / MIT)',
+  'Iniciativa formativa vinculada a la Unidad Educativa Surcos',
+] as const;
 
 export function CeoSection() {
   const { fadeUp } = useEntrancePresets();
 
   return (
-    <section id="nosotros" className="py-20 md:py-24 border-b border-[var(--border-light)] bg-[var(--white)]">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6">
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.2 }}
-          className="rounded-3xl border border-[var(--border)] bg-[var(--white)] p-6 sm:p-10 shadow-[var(--shadow-subtle)]"
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-6 pb-6 border-b border-[var(--border-light)]">
-            <div className="w-16 h-16 rounded-2xl bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center flex-shrink-0 font-serif text-2xl font-bold border border-[var(--accent)]/20">
-              JB
-            </div>
-            <div>
-              <div className="flex items-center gap-2 mb-1">
-                <Badge variant="accent" size="sm">
-                  Liderazgo estudiantil
-                </Badge>
-                <span className="text-xs text-[var(--text-3)]">
-                  Unidad Educativa Surcos
+    <section id="nosotros" className="bg-[var(--off-white)] border-b border-[var(--border-light)] py-20 md:py-28">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16 items-start">
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            className="lg:col-span-2"
+          >
+            <span className="text-[0.72rem] font-semibold uppercase tracking-[0.1em] text-[var(--accent)] block mb-3">
+              Liderazgo estudiantil
+            </span>
+            <h3 className="font-serif text-[clamp(1.6rem,3vw,2.4rem)] text-[var(--text-1)] tracking-tight leading-[1.12] mb-4">
+              Juan Bernardo Ordóñez.
+            </h3>
+            <p className="text-[0.95rem] text-[var(--text-2)] leading-relaxed mb-2">
+              CEO e impulsor de Surcos Saving.
+            </p>
+            <p className="text-[0.85rem] text-[var(--text-3)] leading-relaxed">
+              Quito, Ecuador · Unidad Educativa Surcos
+            </p>
+          </motion.div>
+
+          <motion.div
+            variants={fadeUp}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, amount: 0.3 }}
+            className="lg:col-span-3"
+          >
+            <p className="text-[1.05rem] text-[var(--text-2)] leading-relaxed mb-8">
+              Desarrollador de software desde los 13 años, con interés en tecnología,
+              educación y emprendimiento. Su visión: ayudar a los estudiantes a crear
+              hábitos financieros y convertir sus ideas en oportunidades reales.
+            </p>
+            <div className="flex flex-wrap gap-x-6 gap-y-3">
+              {CREDENTIALS.map((c) => (
+                <span key={c} className="text-[0.8rem] text-[var(--text-3)] flex items-center gap-2">
+                  <span className="w-1 h-1 rounded-full bg-[var(--accent)]/50 shrink-0" />
+                  {c}
                 </span>
-              </div>
-              <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[var(--text-1)]">
-                Juan Bernardo Ordóñez
-              </h3>
-              <p className="text-xs sm:text-sm text-[var(--text-3)] font-medium">
-                CEO e impulsor de Surcos Saving
-              </p>
+              ))}
             </div>
-          </div>
-
-          <div className="pt-6 space-y-4">
-            <p className="text-sm sm:text-base text-[var(--text-2)] leading-relaxed">
-              Juan Bernardo Ordóñez es desarrollador de software desde los 13 años y cuenta con formación complementaria mediante cursos de instituciones como Harvard y MIT, incluidos programas como CS50, según las certificaciones que pueda acreditar. Su interés por la tecnología, la educación y el emprendimiento impulsa la visión de Surcos Saving: ayudar a los estudiantes a desarrollar hábitos financieros y convertir sus ideas en oportunidades reales.
+            <p className="text-[0.82rem] text-[var(--text-4)] mt-8 pt-6 border-t border-[var(--border-light)]">
+              Nota de transparencia: formación académica y tecnológica según certificaciones acreditables.
             </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-4">
-              <div className="p-3.5 rounded-xl bg-[var(--off-white)] border border-[var(--border-light)] flex items-center gap-2.5">
-                <Code className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
-                <span className="text-xs text-[var(--text-2)] font-medium">Desarrollo y código</span>
-              </div>
-              <div className="p-3.5 rounded-xl bg-[var(--off-white)] border border-[var(--border-light)] flex items-center gap-2.5">
-                <GraduationCap className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
-                <span className="text-xs text-[var(--text-2)] font-medium">Programas como CS50</span>
-              </div>
-              <div className="p-3.5 rounded-xl bg-[var(--off-white)] border border-[var(--border-light)] flex items-center gap-2.5">
-                <Award className="w-4 h-4 text-[var(--accent)] flex-shrink-0" />
-                <span className="text-xs text-[var(--text-2)] font-medium">Enfoque formativo y PYME</span>
-              </div>
-            </div>
-
-            <p className="text-[11px] text-[var(--text-4)] pt-3 border-t border-[var(--border-light)]">
-              Nota de transparencia: Las credenciales y cursos corresponden a programas de formación académica y tecnológica certificados. Surcos Saving es una iniciativa formativa orientada a la comunidad educativa.
-            </p>
-          </div>
-        </motion.div>
+          </motion.div>
+        </div>
       </div>
     </section>
   );

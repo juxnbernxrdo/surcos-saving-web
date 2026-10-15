@@ -1,259 +1,132 @@
 'use client';
 
-import React, { useState } from 'react';
-import { motion } from 'motion/react';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { useEntrancePresets, EASE_OUT } from '@/components/marketing/motion-tokens';
-import {
-  Coins,
-  Sparkles,
-  ArrowRight,
-  TrendingUp,
-  ShoppingBag,
-  GraduationCap,
-  CheckCircle2,
-} from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
+import React from 'react';
+import { motion, useReducedMotion } from 'motion/react';
+import { ArrowRight } from 'lucide-react';
+import { EASE_OUT, DURATIONS } from '@/components/marketing/motion-tokens';
+import { Cta } from '@/components/marketing/cta';
+
+const JOURNEY = [
+  {
+    number: '01',
+    title: 'Decisión diaria',
+    description:
+      'Apartar $0.10 al día en lugar de gastarlo sin pensar. El vuelto del bar escolar se vuelve el primer acto de control sobre tus recursos.',
+  },
+  {
+    number: '02',
+    title: 'Constancia acumulada',
+    description:
+      '$9.00 en 90 días de disciplina. Un fondo tangible construido sin préstamos ni deudas familiares.',
+  },
+  {
+    number: '03',
+    title: 'Insumos y prototipo',
+    description:
+      'Comprar materiales para tus primeros 25 productos: pulseras, stickers o separadores con coste unitario calculado.',
+  },
+  {
+    number: '04',
+    title: 'Feria escolar',
+    description:
+      'Vender en la feria de la Unidad Educativa Surcos, registrar ventas y reinvertir el 50% de la ganancia.',
+  },
+] as const;
 
 export function HeroSection() {
-  const { fadeUp, fade } = useEntrancePresets();
-  const [activeStep, setActiveStep] = useState<number>(0);
+  const reduce = useReducedMotion() ?? false;
 
-  const journeySteps = [
-    {
-      label: '1. Tu decisión diaria',
-      badge: 'Hábito',
-      amount: '$0.10 al día',
-      desc: 'Guardar el vuelto del bar en lugar de gastarlo sin darte cuenta.',
-      metric: 'Esfuerzo mínimo',
-      icon: Coins,
-      tag: 'Ahorro',
-    },
-    {
-      label: '2. Acumulación constante',
-      badge: '30 a 90 días',
-      amount: '$9.00 ahorrados',
-      desc: 'Sin deudas ni préstamos. Tienes tu primer fondo propio.',
-      metric: 'Disciplina real',
-      icon: TrendingUp,
-      tag: 'Constancia',
-    },
-    {
-      label: '3. Creación del producto',
-      badge: 'Insumos',
-      amount: 'Materiales listos',
-      desc: 'Comprar materiales para stickers, pulseras o papelería escolar.',
-      metric: 'De la idea al objeto',
-      icon: ShoppingBag,
-      tag: 'Emprendimiento',
-    },
-    {
-      label: '4. Venta en feria escolar',
-      badge: 'Feria presencial',
-      amount: 'Resultados y margen',
-      desc: 'Presentar tu producto con autorización y recuperar tu inversión con ganancia.',
-      metric: 'Habilidad de por vida',
-      icon: GraduationCap,
-      tag: 'Formación',
-    },
-  ];
+  const entrance = (delay: number) => ({
+    initial: reduce ? { opacity: 0 } : { opacity: 0, y: 16 },
+    animate: { opacity: 1, y: 0 },
+    transition: { duration: reduce ? 0.2 : DURATIONS.smooth, delay, ease: EASE_OUT },
+  });
 
   return (
-    <section className="relative overflow-hidden pt-12 md:pt-20 pb-16 md:pb-24 border-b border-[var(--border-light)]">
-      {/* Ambient Radial Diffuse Gradient */}
+    <section id="top" className="relative overflow-hidden bg-[var(--white)]">
+      {/* Ambient estático (sin re-render por scroll) */}
       <div
-        className="absolute inset-0 pointer-events-none -z-10 bg-[radial-gradient(58%_52%_at_50%_0%,var(--accent-soft),transparent_72%)]"
         aria-hidden="true"
+        className="absolute inset-x-0 top-0 h-[560px] pointer-events-none bg-[radial-gradient(58%_52%_at_50%_0%,var(--accent-soft),transparent_72%)] opacity-70"
       />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Eyebrow Pill */}
-        <motion.div
-          variants={fade}
-          initial="hidden"
-          animate="visible"
-          className="flex justify-center mb-5"
-        >
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[var(--white)] border border-[var(--border)] shadow-xs select-none">
-            <span className="flex h-2 w-2 rounded-full bg-[var(--green)] animate-pulse" />
-            <span className="text-xs font-medium text-[var(--text-2)]">
-              Comunidad Educativa Unidad Educativa Surcos
-            </span>
-            <span className="text-[var(--border)]">|</span>
-            <span className="text-xs font-semibold text-[var(--accent)] flex items-center gap-1">
-              PYME Estudiantil <Sparkles className="w-3 h-3" />
-            </span>
-          </div>
-        </motion.div>
-
-        {/* Hero Title and Copy */}
-        <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="text-center max-w-4xl mx-auto"
-        >
-          <h1 className="font-serif text-[clamp(2.6rem,5.5vw,5rem)] text-[var(--text-1)] tracking-tight leading-[1.06] mb-6">
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 pt-20 md:pt-28 pb-16 md:pb-20">
+        <div className="text-center max-w-4xl mx-auto">
+          <motion.h1
+            {...entrance(0)}
+            className="font-serif text-[clamp(2.6rem,5.5vw,5rem)] leading-[1.06] text-[var(--text-1)] tracking-tight mb-6"
+          >
             Pequeñas monedas.{' '}
-            <span className="italic font-normal text-[var(--accent)]">
-              Grandes posibilidades.
-            </span>
-          </h1>
+            <em className="italic font-normal text-[var(--accent)]">Grandes posibilidades.</em>
+          </motion.h1>
 
-          <p className="font-sans text-[1.1rem] sm:text-[1.28rem] text-[var(--text-2)] leading-relaxed max-w-2xl mx-auto mb-9 font-normal">
+          <motion.p
+            {...entrance(0.08)}
+            className="text-[1.08rem] sm:text-[1.22rem] text-[var(--text-2)] max-w-2xl mx-auto leading-relaxed font-normal mb-9"
+          >
             Aprende a ahorrar, convierte tus ideas en emprendimientos reales y desarrolla las
             habilidades que te ayudarán a construir tu futuro.
-          </p>
+          </motion.p>
 
-          {/* Call to Actions */}
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-14">
-            <Button
-              size="lg"
-              variant="primary"
-              className="w-full sm:w-auto text-[14px]"
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-              onClick={() => {
-                const el = document.querySelector('#calculadora');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
-              Calcula tus ahorros
-            </Button>
-
-            <Button
-              size="lg"
-              variant="secondary"
-              className="w-full sm:w-auto text-[14px]"
-              onClick={() => {
-                const el = document.querySelector('#emprendimiento');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
-              }}
-            >
+          <motion.div
+            {...entrance(0.16)}
+            className="flex flex-col sm:flex-row items-center justify-center gap-3.5 mb-7"
+          >
+            <Cta href="#calculadora" size="lg" className="w-full sm:w-auto">
+              <span>Calcula tus ahorros</span>
+              <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+            </Cta>
+            <Cta href="#emprendimiento" variant="ghost" size="lg" className="w-full sm:w-auto">
               Descubre cómo emprender
-            </Button>
-          </div>
-        </motion.div>
+            </Cta>
+          </motion.div>
 
-        {/* Interactive Milestone Progression (Not generic fintech, but the tangible Surcos journey) */}
+          <motion.p
+            {...entrance(0.24)}
+            className="text-[0.82rem] text-[var(--text-3)] font-medium"
+          >
+            PYME estudiantil · Unidad Educativa Surcos · Fines pedagógicos
+          </motion.p>
+        </div>
+
+        {/* Trayectoria editorial — patrón Pipeline ContaMind: 4 columnas estáticas */}
         <motion.div
-          variants={fadeUp}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl mx-auto rounded-3xl border border-[var(--border)] bg-[var(--white)] shadow-[var(--shadow-default)] p-6 sm:p-8"
+          {...entrance(0.32)}
+          className="max-w-6xl mx-auto mt-16 md:mt-20"
         >
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-6 border-b border-[var(--border-light)]">
-            <div>
-              <span className="text-xs font-semibold uppercase tracking-wider text-[var(--text-3)] block mb-1">
-                La ruta de Surcos Saving
-              </span>
-              <h3 className="font-serif text-xl sm:text-2xl text-[var(--text-1)] font-normal">
-                Cómo una moneda de diez centavos se convierte en un proyecto
-              </h3>
-            </div>
-            <div className="flex items-center gap-1.5 bg-[var(--off-white)] p-1 rounded-full border border-[var(--border-light)] self-start sm:self-auto">
-              {journeySteps.map((_, idx) => (
-                <button
-                  key={idx}
-                  type="button"
-                  onClick={() => setActiveStep(idx)}
-                  className={`px-3 py-1 text-xs font-semibold rounded-full transition-all duration-150 cursor-pointer ${
-                    activeStep === idx
-                      ? 'bg-[var(--white)] text-[var(--accent)] shadow-xs ring-1 ring-black/5'
-                      : 'text-[var(--text-3)] hover:text-[var(--text-1)]'
-                  }`}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12">
+            {JOURNEY.map((item, idx) => (
+              <motion.article
+                key={item.number}
+                initial={reduce ? { opacity: 0 } : { opacity: 0, y: 14 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: reduce ? 0.2 : DURATIONS.smooth,
+                  delay: 0.28 + idx * 0.06,
+                  ease: EASE_OUT,
+                }}
+                className="text-center lg:text-left"
+              >
+                <span
+                  aria-hidden="true"
+                  className="block font-serif text-[clamp(2.2rem,3.5vw,3rem)] leading-none text-[var(--text-4)] opacity-60 select-none"
                 >
-                  Paso {idx + 1}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* Active Step Content */}
-          <div className="pt-6 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
-            <div className="md:col-span-7">
-              <div className="inline-flex items-center gap-2 mb-3">
-                <Badge variant="accent" size="sm">
-                  {journeySteps[activeStep].tag}
-                </Badge>
-                <span className="text-xs text-[var(--text-3)] font-mono">
-                  {journeySteps[activeStep].badge}
+                  {item.number}
                 </span>
-              </div>
-              <h4 className="text-xl sm:text-2xl font-semibold text-[var(--text-1)] tracking-tight mb-2">
-                {journeySteps[activeStep].label}
-              </h4>
-              <p className="text-sm sm:text-base text-[var(--text-2)] leading-relaxed mb-4">
-                {journeySteps[activeStep].desc}
-              </p>
-              <div className="flex items-center gap-2 text-xs text-[var(--text-3)]">
-                <CheckCircle2 className="w-4 h-4 text-[var(--green)] stroke-[2.5]" />
-                <span>Impacto formativo: <strong>{journeySteps[activeStep].metric}</strong></span>
-              </div>
-            </div>
-
-            <div className="md:col-span-5 bg-[var(--off-white)] rounded-2xl p-5 border border-[var(--border-light)] flex flex-col justify-center items-center text-center">
-              {React.createElement(journeySteps[activeStep].icon, {
-                className: 'w-10 h-10 text-[var(--accent)] mb-3 stroke-[1.8]',
-              })}
-              <div className="font-mono text-2xl font-bold text-[var(--text-1)] tracking-tight mb-1">
-                {journeySteps[activeStep].amount}
-              </div>
-              <p className="text-xs text-[var(--text-3)]">
-                Etapa {activeStep + 1} de 4 en la formación del estudiante
-              </p>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* 3 Pillars Summary Bar */}
-        <motion.div
-          variants={fade}
-          initial="hidden"
-          animate="visible"
-          className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-4 max-w-4xl mx-auto"
-        >
-          <div className="p-4 rounded-2xl border border-[var(--border-light)] bg-[var(--white)] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-9 h-9 rounded-full bg-[var(--accent-soft)] text-[var(--accent)] flex items-center justify-center flex-shrink-0">
-              <Coins className="w-4.5 h-4.5 stroke-[2]" />
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-1)]">
-                1. Ahorrar
-              </h4>
-              <p className="text-xs text-[var(--text-3)]">
-                Aprender a administrar pequeños montos con disciplina.
-              </p>
-            </div>
+                <h3 className="text-[0.8rem] font-semibold uppercase tracking-[0.12em] text-[var(--text-1)] mt-4 mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-[0.95rem] leading-[1.7] text-[var(--text-2)] max-w-[28ch] mx-auto lg:mx-0">
+                  {item.description}
+                </p>
+              </motion.article>
+            ))}
           </div>
 
-          <div className="p-4 rounded-2xl border border-[var(--border-light)] bg-[var(--white)] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-9 h-9 rounded-full bg-[var(--green-soft)] text-[var(--green)] flex items-center justify-center flex-shrink-0">
-              <ShoppingBag className="w-4.5 h-4.5 stroke-[2]" />
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-1)]">
-                2. Emprender
-              </h4>
-              <p className="text-xs text-[var(--text-3)]">
-                Crear productos y participar en ferias presenciales autorizadas.
-              </p>
-            </div>
-          </div>
-
-          <div className="p-4 rounded-2xl border border-[var(--border-light)] bg-[var(--white)] flex items-center gap-3.5 shadow-2xs">
-            <div className="w-9 h-9 rounded-full bg-[var(--amber-soft)] text-[var(--amber)] flex items-center justify-center flex-shrink-0">
-              <GraduationCap className="w-4.5 h-4.5 stroke-[2]" />
-            </div>
-            <div>
-              <h4 className="text-xs font-semibold uppercase tracking-wider text-[var(--text-1)]">
-                3. Aprender
-              </h4>
-              <p className="text-xs text-[var(--text-3)]">
-                Habilidades tecnológicas, financieras y de pensamiento crítico.
-              </p>
-            </div>
-          </div>
+          <p className="text-center text-[0.9rem] text-[var(--text-3)] leading-relaxed max-w-xl mx-auto mt-14">
+            Ahorrar, emprender y aprender: tres hábitos que se entrenan con centavos
+            y se usan toda la vida.
+          </p>
         </motion.div>
       </div>
     </section>

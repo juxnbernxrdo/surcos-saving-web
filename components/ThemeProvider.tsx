@@ -38,6 +38,30 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const savedHC = localStorage.getItem('surcos_high_contrast') === 'true';
     setThemeModeState(savedTheme);
     setHighContrast(savedHC);
+
+    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+    const initialResolved: 'light' | 'dark' =
+      savedTheme === 'dark'
+        ? 'dark'
+        : savedTheme === 'light'
+        ? 'light'
+        : mediaQuery.matches
+        ? 'dark'
+        : 'light';
+    setResolvedTheme(initialResolved);
+
+    const root = document.documentElement;
+    if (initialResolved === 'dark') {
+      root.classList.add('dark');
+      root.classList.remove('light');
+    } else {
+      root.classList.remove('dark');
+      root.classList.add('light');
+    }
+
+    requestAnimationFrame(() => {
+      root.classList.remove('no-transitions');
+    });
   }, []);
 
   useEffect(() => {
@@ -57,8 +81,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     const root = document.documentElement;
     if (active === 'dark') {
       root.classList.add('dark');
+      root.classList.remove('light');
     } else {
       root.classList.remove('dark');
+      root.classList.add('light');
     }
 
     if (highContrast) {
@@ -73,8 +99,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         setResolvedTheme(nextTheme);
         if (nextTheme === 'dark') {
           root.classList.add('dark');
+          root.classList.remove('light');
         } else {
           root.classList.remove('dark');
+          root.classList.add('light');
         }
       }
     };
@@ -89,10 +117,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   }, []);
 
   const toggleTheme = useCallback(() => {
-    const nextMode: ThemeMode =
-      themeMode === 'light' ? 'dark' : themeMode === 'dark' ? 'system' : 'light';
-    setThemeMode(nextMode);
-  }, [themeMode, setThemeMode]);
+    const nextTheme: 'light' | 'dark' = resolvedTheme === 'dark' ? 'light' : 'dark';
+    setThemeMode(nextTheme);
+  }, [resolvedTheme, setThemeMode]);
 
   const toggleHighContrast = useCallback(() => {
     setHighContrast((prev) => {

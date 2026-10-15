@@ -63,3 +63,40 @@ assert.strictEqual(fairResult.breakEvenUnits, 4); // $5 / ($2.50 - $1.00) = 3.33
 console.log('✓ Entrepreneurship math passed with breakeven verification.');
 
 console.log('All tests passed successfully!');
+
+// 3. Savings engine (lib/savings.ts mirror): integer cents, exact reference goals
+const CHALLENGES = [
+  { id: '5c', dailyCents: 5, days: 30, goalCents: 150 },
+  { id: '10c', dailyCents: 10, days: 90, goalCents: 900 },
+  { id: '25c', dailyCents: 25, days: 180, goalCents: 4500 },
+  { id: '50c', dailyCents: 50, days: 365, goalCents: 18250 },
+];
+
+function simulateCents(dailyCents, days, goalCents) {
+  const accumulated = dailyCents * days; // A(n) = a·n, exact in integers
+  const compliance = goalCents > 0 ? Math.min(100, Math.round((accumulated / goalCents) * 1000) / 10) : 0;
+  const remaining = Math.max(0, goalCents - accumulated); // R(n) = max(M−A, 0)
+  const goalDay = dailyCents > 0 ? Math.ceil(goalCents / dailyCents) : null;
+  return { accumulated, compliance, remaining, goalDay };
+}
+
+for (const c of CHALLENGES) {
+  const r = simulateCents(c.dailyCents, c.days, c.goalCents);
+  assert.strictEqual(r.accumulated, c.goalCents, `Reto ${c.id}: A(n) debe igualar la meta exacta`);
+  assert.strictEqual(r.compliance, 100, `Reto ${c.id}: cumplimiento debe ser 100%`);
+  assert.strictEqual(r.remaining, 0, `Reto ${c.id}: restante debe ser 0`);
+  assert.ok(r.goalDay !== null && r.goalDay <= c.days, `Reto ${c.id}: meta alcanzable dentro del plazo`);
+}
+// Partial progress + caps
+const partial = simulateCents(10, 45, 900);
+assert.strictEqual(partial.accumulated, 450);
+assert.strictEqual(partial.compliance, 50);
+assert.strictEqual(partial.remaining, 450);
+const over = simulateCents(50, 365, 900);
+assert.strictEqual(over.compliance, 100, 'Cumplimiento limitado a 100');
+assert.strictEqual(over.remaining, 0, 'Restante nunca negativo');
+const zeroGoal = simulateCents(10, 30, 0);
+assert.strictEqual(zeroGoal.compliance, 0, 'Sin división entre cero');
+console.log('✓ Savings engine: 4 metas exactas, cumplimiento, restante y día de meta verificados.');
+
+console.log('All simulator checks passed successfully!');
